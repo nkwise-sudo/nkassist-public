@@ -1,138 +1,210 @@
 # NKAssist
 
-> Assistente profissional com IA baseado em RAG (Retrieval Augmented Generation) com recuperação semântica via FAISS e pipeline de conhecimento versionado.
+> Pipeline RAG profissional com recuperação semântica via FAISS, synthesis engine com validação em camadas e evidência auditável.
 
-![Python](https://img.shields.io/badge/Python-87.9%25-3776AB?style=flat-square&logo=python&logoColor=white)
-![Shell](https://img.shields.io/badge/Shell-8.5%25-4EAA25?style=flat-square&logo=gnu-bash&logoColor=white)
-![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow?style=flat-square)
-![RAG](https://img.shields.io/badge/RAG-FAISS-blueviolet?style=flat-square)
-![LLM](https://img.shields.io/badge/LLM-Multi--Model-orange?style=flat-square)
-![HITL](https://img.shields.io/badge/HITL-Human--in--the--Loop-green?style=flat-square)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![FAISS](https://img.shields.io/badge/RAG-FAISS-blueviolet?style=flat-square)](https://github.com/facebookresearch/faiss)
+[![LLM](https://img.shields.io/badge/LLM-Multi--Model-orange?style=flat-square)](https://platform.openai.com)
+[![HITL](https://img.shields.io/badge/HITL-Human--in--the--Loop-green?style=flat-square)](https://github.com/nkwise-sudo/nkassist-public)
+[![Audit](https://img.shields.io/badge/audit-13%2F13%20PASS-brightgreen?style=flat-square)](audits/audit_report_gxp_demo.json)
 
 ---
 
 ## Visão Geral
 
-O **NKAssist** é um assistente de IA profissional que utiliza um vault de conhecimento versionado como fonte única da verdade (*source of truth*). O sistema recupera contexto relevante via índice FAISS antes de gerar respostas, garantindo precisão, rastreabilidade e controle total sobre o conhecimento utilizado.
+O **NKAssist** é um pipeline RAG (*Retrieval Augmented Generation*) construído para ambientes que exigem rastreabilidade, governança e qualidade verificável nas respostas geradas por IA.
 
-O projeto foi construído com foco em **governança desde o design** — cada resposta é rastreável, cada fonte é citada, e nenhuma informação entra no sistema sem passar pelo pipeline oficial de ingest.
+O sistema recupera contexto relevante via índice FAISS antes de gerar qualquer resposta. Cada resposta passa por três camadas de validação — estrutural, heurística e semântica — antes de ser entregue. Toda operação é registrada em evidence logs imutáveis.
 
----
-
-## Arquitetura
-
-```
-/srv
-├── lagm-vault          → vault oficial de conhecimento (Obsidian + Git)
-├── nkassist            → assistente com RAG + FAISS
-├── ops-classifier      → motor de classificação operacional
-└── nkwise/
-    └── shared/scripts  → scripts operacionais compartilhados
-```
-
-O NKAssist **não** mantém cópia local do conhecimento. Ele lê diretamente do vault via variável de ambiente:
-
-```env
-NKASSIST_KNOWLEDGE_DIR=/srv/lagm-vault
-```
+Este repositório inclui um **corpus de demonstração com 13 SOPs sintéticos** do domínio regulatório farmacêutico/biotech (GxP), com audit report público validando 13/13 queries com PASS.
 
 ---
 
-## Fluxo de Conhecimento
+## Pipeline
 
 ```
-Obsidian (edição)
-     ↓
-  GitHub (versionamento)
-     ↓
-  git pull → /srv/lagm-vault
-     ↓
-  RAG ingest
-     ↓
-  FAISS rebuild
-     ↓
-  NKAssist (resposta contextualizada)
+Query
+  → Retriever (multi-query + rerank + diversity cap)
+  → LLM → draft
+  → Validator estrutural
+  → Critic heurístico
+  → Semantic Validator  (LLM separado, temperatura 0)
+  → Final Answer
+  → Evidence Log        (rag_queries.jsonl)
+  → HITL               (se high-risk ou falha semântica)
 ```
-
----
-
-## Pipeline de Atualização
-
-O script oficial gerencia todo o ciclo de atualização:
-
-```bash
-/srv/nkwise/shared/scripts/update_vault.sh
-```
-
-Etapas executadas:
-1. `git pull` no vault (`/srv/lagm-vault`)
-2. Ingest do RAG com os novos documentos
-3. Rebuild do índice vetorial FAISS
 
 ---
 
 ## Estrutura do Projeto
 
 ```
-nkassist/
-├── rag/        → ingest, indexação e retrieval semântico
-├── core/       → configurações e inicialização do sistema
-├── agent/      → lógica do assistente e orquestração
-├── data/       → configurações do corpus e índices
-├── lab/        → experimentos e protótipos
-├── lab_ui/     → interface de laboratório
-├── audits/     → relatórios de qualidade RAG
-├── docs/       → documentação técnica
-└── ops/        → scripts operacionais
+nkassist-public/
+├── .env.example                     ← variáveis de ambiente (template)
+├── .gitignore
+├── corpus/
+│   └── gxp-demo/                    ← 13 SOPs sintéticos (corpus de demo)
+│       ├── SOP-001-controle-temperatura-camaras-frias.md
+│       ├── SOP-002-calibracao-balancas-analiticas.md
+│       └── ...
+├── rag/
+│   ├── ingest.py                    ← ingestão e chunking de documentos
+│   ├── vectorstore_faiss.py         ← build e query do índice FAISS
+│   ├── retriever.py                 ← multi-query + rerank + diversity cap
+│   ├── rerank.py                    ← reranking semântico
+│   ├── focus.py                     ← context focusing
+│   ├── parsers.py                   ← parsers de formato
+│   └── synthesis_engine.py          ← validator + critic + semantic validator
+├── core/
+│   └── evidence.py                  ← evidence log estruturado
+├── audits/
+│   ├── run_gxp_audit.py             ← script de audit reproduzível
+│   └── audit_report_gxp_demo.json  ← resultado validado: 13/13 PASS
+├── data/                            ← gerado localmente (não versionado)
+│   ├── corpus.jsonl
+│   ├── faiss.index
+│   └── faiss_meta.jsonl
+└── evidence/                        ← logs gerados localmente (não versionados)
+    └── rag_queries.jsonl
 ```
+
+---
+
+## Quick Start
+
+### 1. Pré-requisitos
+
+- Python 3.10+
+- Chave OpenAI (`gpt-4o` e `text-embedding-3-large`)
+
+```bash
+pip install openai faiss-cpu numpy python-dotenv
+```
+
+### 2. Configurar ambiente
+
+```bash
+cp .env.example .env
+# Editar .env com sua OPENAI_API_KEY
+```
+
+### 3. Ingestão do corpus
+
+```bash
+python test_ingest.py
+# Esperado: 13 documentos, 92 chunks
+```
+
+### 4. Build do índice FAISS
+
+```bash
+python test_faiss.py
+# Esperado: 92/92 chunks indexados, dim=3072
+```
+
+### 5. Testar retrieval
+
+```bash
+python test_retriever.py
+# Esperado: SOP correto no #1 para cada query
+```
+
+### 6. Rodar audit
+
+```bash
+python audits/run_gxp_audit.py
+# Esperado: 13/13 PASS
+```
+
+> Para o guia operacional completo com outputs validados, consulte [RUNBOOK.md](RUNBOOK.md).
+
+---
+
+## Corpus GxP Demo
+
+13 SOPs sintéticos do domínio regulatório farmacêutico/biotech — nenhum dado real de paciente ou processo:
+
+| SOP | Tema |
+|-----|------|
+| SOP-001 | Controle de Temperatura em Câmaras Frias |
+| SOP-002 | Calibração de Balanças Analíticas |
+| SOP-003 | Limpeza e Sanitização de Áreas Limpas |
+| SOP-004 | Recebimento e Quarentena de Matéria-Prima |
+| SOP-005 | Gestão de Desvios e Não-Conformidades |
+| SOP-006 | Controle de Acesso a Áreas Classificadas |
+| SOP-007 | Controle de Documentos e Registros |
+| SOP-008 | Gestão de Fornecedores Críticos |
+| SOP-009 | Coleta e Processamento de Amostras Biológicas |
+| SOP-010 | Controle de Temperatura na Cadeia Fria |
+| SOP-011 | Gestão de Resíduos Químicos e Biológicos |
+| SOP-012 | Qualificação de Equipamentos Críticos (IQ/OQ/PQ) |
+| SOP-013 | Controle de Mudanças |
+
+O corpus pode ser substituído por qualquer conjunto de documentos `.md` ou `.txt` via `NKASSIST_KNOWLEDGE_DIR` no `.env`.
+
+---
+
+## Qualidade — Audit Report
+
+Resultado validado em 2026-05-15 sobre o corpus GxP demo:
+
+| Métrica | Resultado |
+|---------|-----------|
+| Queries testadas | 13 |
+| PASS | 13 (100%) |
+| FAIL | 0 |
+| Score top-1 médio | 0.655 |
+| Integridade do índice | 92/92 chunks |
+
+Relatório completo: [`audits/audit_report_gxp_demo.json`](audits/audit_report_gxp_demo.json)
 
 ---
 
 ## Princípios de Design
 
 | Princípio | Descrição |
-|---|---|
-| **Vault único** | Única fonte de verdade — sem duplicação de conhecimento |
-| **Ingest controlado** | Nenhum documento entra no índice sem passar pelo pipeline oficial |
-| **Índice reconstruível** | O FAISS pode ser recriado do zero a qualquer momento a partir do vault |
-| **Logs append-only** | Rastreabilidade completa de operações sem sobrescrita |
-| **Human-in-the-Loop** | Aprovação humana antes de ações críticas |
-| **Citations required** | Toda resposta exige citação da fonte no vault |
+|-----------|-----------|
+| **Índice reconstruível** | O FAISS pode ser recriado do zero a qualquer momento a partir do corpus |
+| **Validação em camadas** | Estrutural → Heurística → Semântica antes de cada resposta final |
+| **Evidence logs** | Toda query, contexto e resposta registrados em append-only |
+| **Human-in-the-Loop** | Aprovação humana antes de ações classificadas como high-risk |
+| **Corpus plugável** | Qualquer diretório de documentos pode ser usado como fonte de conhecimento |
+| **Audit reproduzível** | Script de audit incluído — qualquer pessoa pode validar a qualidade do retriever |
 
 ---
 
 ## Stack Técnica
 
-```yaml
-Linguagem principal: Python 3.x
-Recuperação semântica: FAISS
-Paradigma: RAG (Retrieval Augmented Generation)
-LLM: Multi-model (OpenAI GPT-4.1, configurável via env)
-Embeddings: text-embedding-3-large (OpenAI)
-Vault de conhecimento: Obsidian + Git
-Scripts operacionais: Shell / Bash
-Infraestrutura: Linux Server
-```
+| Componente | Tecnologia |
+|------------|------------|
+| Linguagem | Python 3.10+ |
+| Embeddings | text-embedding-3-large (OpenAI) |
+| Indexação vetorial | FAISS |
+| LLM | GPT-4o (configurável via env) |
+| Paradigma | RAG — Retrieval Augmented Generation |
+| Evidence log | JSON Lines (append-only) |
 
 ---
 
-## Qualidade — Audit Report
+## Configuração
 
-O sistema possui módulo de auditoria automatizada que valida a qualidade das respostas:
+Todas as variáveis de configuração são gerenciadas via `.env`. Consulte [`.env.example`](.env.example) para a lista completa.
 
-| Métrica | Resultado |
-|---|---|
-| Total de queries testadas | 38 |
-| PASS | 38 (100%) |
-| WARNING | 0 |
-| FAIL | 0 |
-| Score médio | 10.0 |
-| Coverage média | 1.0 |
+Principais variáveis:
+
+```env
+OPENAI_API_KEY=sk-...
+NKASSIST_LLM_MODEL=gpt-4o-2024-08-06
+NKASSIST_KNOWLEDGE_DIR=./corpus/gxp-demo
+NKASSIST_DATA_DIR=./data
+NKASSIST_CHUNK_SIZE=900
+NKASSIST_CHUNK_OVERLAP=150
+```
 
 ---
 
 ## Autor
 
-**nkwise-sudo**
-Arquiteto de sistemas de IA — Consultor em governança e orquestração Multi-LLM
+**nkwise-sudo**  
+Arquiteto de sistemas de IA — Especialista em governança e orquestração RAG/Multi-LLM em contextos regulatórios.  
 [github.com/nkwise-sudo](https://github.com/nkwise-sudo)
