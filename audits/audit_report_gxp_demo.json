@@ -1,0 +1,260 @@
+{
+  "timestamp": "2026-05-15T18:42:38.501251+00:00",
+  "corpus": "gxp-demo",
+  "overall_status": "PASS",
+  "summary": {
+    "total_queries": 13,
+    "passed": 13,
+    "failed": 0,
+    "coverage": 1.0
+  },
+  "queries": [
+    {
+      "id": "Q001",
+      "category": "temperature_control",
+      "query": "qual a faixa de temperatura e umidade para areas de producao farmaceutica",
+      "expected_source": "SOP-001",
+      "status": "PASS",
+      "top_3_sources": [
+        "SOP-010-controle-temperatura-cadeia-fria.md",
+        "SOP-001-controle-temperatura-camaras-frias.md",
+        "SOP-003-limpeza-sanitizacao-areas-limpas.md"
+      ],
+      "top_3_scores": [
+        0.636,
+        0.6266,
+        0.6194
+      ],
+      "hit_in_top3": true,
+      "retrieval_time_ms": 2895.88
+    },
+    {
+      "id": "Q002",
+      "category": "calibration",
+      "query": "qual a frequencia de calibracao de balancas analiticas",
+      "expected_source": "SOP-002",
+      "status": "PASS",
+      "top_3_sources": [
+        "SOP-002-calibracao-balancas-analiticas.md",
+        "SOP-002-calibracao-balancas-analiticas.md",
+        "SOP-003-limpeza-sanitizacao-areas-limpas.md"
+      ],
+      "top_3_scores": [
+        0.6679,
+        0.5998,
+        0.5983
+      ],
+      "hit_in_top3": true,
+      "retrieval_time_ms": 779.39
+    },
+    {
+      "id": "Q003",
+      "category": "cleaning",
+      "query": "quais os produtos aprovados para sanitizacao de areas limpas",
+      "expected_source": "SOP-003",
+      "status": "PASS",
+      "top_3_sources": [
+        "SOP-003-limpeza-sanitizacao-areas-limpas.md",
+        "SOP-006-controle-acesso-areas-classificadas.md",
+        "SOP-010-controle-temperatura-cadeia-fria.md"
+      ],
+      "top_3_scores": [
+        0.6563,
+        0.6275,
+        0.6062
+      ],
+      "hit_in_top3": true,
+      "retrieval_time_ms": 901.02
+    },
+    {
+      "id": "Q004",
+      "category": "receiving",
+      "query": "quais os criterios de rejeicao no recebimento de materia-prima",
+      "expected_source": "SOP-004",
+      "status": "PASS",
+      "top_3_sources": [
+        "SOP-004-recebimento-quarentena-materia-prima.md",
+        "SOP-008-gestao-fornecedores-criticos.md",
+        "SOP-002-calibracao-balancas-analiticas.md"
+      ],
+      "top_3_scores": [
+        0.644,
+        0.6285,
+        0.6013
+      ],
+      "hit_in_top3": true,
+      "retrieval_time_ms": 647.98
+    },
+    {
+      "id": "Q005",
+      "category": "deviations",
+      "query": "como classificar e registrar um desvio de qualidade",
+      "expected_source": "SOP-005",
+      "status": "PASS",
+      "top_3_sources": [
+        "SOP-005-gestao-desvios-nao-conformidades.md",
+        "SOP-012-qualificacao-equipamentos-criticos.md",
+        "SOP-013-controle-mudancas.md"
+      ],
+      "top_3_scores": [
+        0.6443,
+        0.6309,
+        0.6258
+      ],
+      "hit_in_top3": true,
+      "retrieval_time_ms": 745.27
+    },
+    {
+      "id": "Q006",
+      "category": "access_control",
+      "query": "quais os requisitos para acesso a areas limpas classificadas",
+      "expected_source": "SOP-006",
+      "status": "PASS",
+      "top_3_sources": [
+        "SOP-006-controle-acesso-areas-classificadas.md",
+        "SOP-003-limpeza-sanitizacao-areas-limpas.md",
+        "SOP-011-gestao-residuos-quimicos-biologicos.md"
+      ],
+      "top_3_scores": [
+        0.6747,
+        0.6381,
+        0.6137
+      ],
+      "hit_in_top3": true,
+      "retrieval_time_ms": 591.27
+    },
+    {
+      "id": "Q007",
+      "category": "documentation",
+      "query": "como controlar versoes de documentos regulatorios",
+      "expected_source": "SOP-007",
+      "status": "PASS",
+      "top_3_sources": [
+        "SOP-007-controle-documentos-registros.md",
+        "SOP-012-qualificacao-equipamentos-criticos.md",
+        "SOP-013-controle-mudancas.md"
+      ],
+      "top_3_scores": [
+        0.6317,
+        0.6252,
+        0.6194
+      ],
+      "hit_in_top3": true,
+      "retrieval_time_ms": 901.8
+    },
+    {
+      "id": "Q008",
+      "category": "suppliers",
+      "query": "como qualificar e monitorar fornecedores criticos",
+      "expected_source": "SOP-008",
+      "status": "PASS",
+      "top_3_sources": [
+        "SOP-008-gestao-fornecedores-criticos.md",
+        "SOP-005-gestao-desvios-nao-conformidades.md",
+        "SOP-013-controle-mudancas.md"
+      ],
+      "top_3_scores": [
+        0.6575,
+        0.615,
+        0.6079
+      ],
+      "hit_in_top3": true,
+      "retrieval_time_ms": 899.71
+    },
+    {
+      "id": "Q009",
+      "category": "biological_samples",
+      "query": "qual o procedimento para coleta e processamento de amostras biologicas",
+      "expected_source": "SOP-009",
+      "status": "PASS",
+      "top_3_sources": [
+        "SOP-009-coleta-processamento-amostras-biologicas.md",
+        "SOP-011-gestao-residuos-quimicos-biologicos.md",
+        "SOP-010-controle-temperatura-cadeia-fria.md"
+      ],
+      "top_3_scores": [
+        0.6607,
+        0.6239,
+        0.6198
+      ],
+      "hit_in_top3": true,
+      "retrieval_time_ms": 2362.99
+    },
+    {
+      "id": "Q010",
+      "category": "cold_chain",
+      "query": "como monitorar temperatura na cadeia fria de produtos biologicos",
+      "expected_source": "SOP-010",
+      "status": "PASS",
+      "top_3_sources": [
+        "SOP-010-controle-temperatura-cadeia-fria.md",
+        "SOP-001-controle-temperatura-camaras-frias.md",
+        "SOP-009-coleta-processamento-amostras-biologicas.md"
+      ],
+      "top_3_scores": [
+        0.6599,
+        0.6371,
+        0.6228
+      ],
+      "hit_in_top3": true,
+      "retrieval_time_ms": 945.43
+    },
+    {
+      "id": "Q011",
+      "category": "waste",
+      "query": "como descartar residuos quimicos e biologicos de forma segura",
+      "expected_source": "SOP-011",
+      "status": "PASS",
+      "top_3_sources": [
+        "SOP-011-gestao-residuos-quimicos-biologicos.md",
+        "SOP-009-coleta-processamento-amostras-biologicas.md",
+        "SOP-003-limpeza-sanitizacao-areas-limpas.md"
+      ],
+      "top_3_scores": [
+        0.6302,
+        0.5975,
+        0.5907
+      ],
+      "hit_in_top3": true,
+      "retrieval_time_ms": 545.0
+    },
+    {
+      "id": "Q012",
+      "category": "equipment_qualification",
+      "query": "quais as etapas de qualificacao IQ OQ PQ para equipamentos criticos",
+      "expected_source": "SOP-012",
+      "status": "PASS",
+      "top_3_sources": [
+        "SOP-012-qualificacao-equipamentos-criticos.md",
+        "SOP-008-gestao-fornecedores-criticos.md",
+        "SOP-010-controle-temperatura-cadeia-fria.md"
+      ],
+      "top_3_scores": [
+        0.6604,
+        0.6491,
+        0.6318
+      ],
+      "hit_in_top3": true,
+      "retrieval_time_ms": 570.07
+    },
+    {
+      "id": "Q013",
+      "category": "change_control",
+      "query": "qual o processo de avaliacao e aprovacao de mudancas no sistema de qualidade",
+      "expected_source": "SOP-013",
+      "status": "PASS",
+      "top_3_sources": [
+        "SOP-013-controle-mudancas.md",
+        "SOP-007-controle-documentos-registros.md",
+        "SOP-008-gestao-fornecedores-criticos.md"
+      ],
+      "top_3_scores": [
+        0.6436,
+        0.6239,
+        0.6218
+      ],
+      "hit_in_top3": true,
+      "retrieval_time_ms": 547.92
+    }
+  ]
+}
