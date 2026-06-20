@@ -1,6 +1,23 @@
 # NKAssist
 
-> Pipeline RAG profissional com recuperação semântica via FAISS, synthesis engine com validação em camadas e evidência auditável.
+ Pipeline RAG profissional com recuperação semântica via FAISS, synthesis engine com validação em camadas e evidência auditável.
+>
+ ## Sobre este Repositório
+Este repositório é a **versão pública de referência** do NKAssist.
+
+O sistema completo — incluindo vault de conhecimento (LAGM), 
+módulos proprietários de governança, pipelines de validação 
+GxP e corpus regulatório — é mantido em repositório privado 
+sob controle exclusivo da NKwise Consultoria.
+
+O que está disponível aqui:
+- Arquitetura e princípios de design do sistema
+- Stack técnica e fluxo de conhecimento
+- Módulo RAG (recuperação semântica via FAISS)
+- Resultados de auditoria automatizada de qualidade
+
+> Consultas sobre o sistema completo ou sobre projetos 
+> de implementação: edunakahara@gmail.com
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
 [![FAISS](https://img.shields.io/badge/RAG-FAISS-blueviolet?style=flat-square)](https://github.com/facebookresearch/faiss)
