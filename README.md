@@ -14,15 +14,16 @@ O que está disponível aqui:
 - Arquitetura e princípios de design do sistema
 - Stack técnica e fluxo de conhecimento
 - Módulo RAG (recuperação semântica via FAISS)
-- Resultados de auditoria automatizada de qualidade
+- Resultados de auditoria automatizada do retrieval
+- Scripts de validação e RUNBOOK para reproduzir os resultados
 
 > Consultas sobre o sistema completo ou sobre projetos 
 > de implementação: edunakahara@gmail.com
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
 [![FAISS](https://img.shields.io/badge/RAG-FAISS-blueviolet?style=flat-square)](https://github.com/facebookresearch/faiss)
-[![LLM](https://img.shields.io/badge/LLM-Multi--Model-orange?style=flat-square)](https://platform.openai.com)
-[![HITL](https://img.shields.io/badge/HITL-Human--in--the--Loop-green?style=flat-square)](https://github.com/nkwise-sudo/nkassist-public)
+[![LLM](https://img.shields.io/badge/LLM-OpenAI-orange?style=flat-square)](https://platform.openai.com)
+[![Evidence](https://img.shields.io/badge/evidence-append--only%20%2B%20hash--chain-green?style=flat-square)](core/evidence.py)
 [![Audit](https://img.shields.io/badge/audit-13%2F13%20PASS-brightgreen?style=flat-square)](audits/audit_report_gxp_demo.json)
 
 ---
@@ -31,25 +32,27 @@ O que está disponível aqui:
 
 O **NKAssist** é um pipeline RAG (*Retrieval Augmented Generation*) construído para ambientes que exigem rastreabilidade, governança e qualidade verificável nas respostas geradas por IA.
 
-O sistema recupera contexto relevante via índice FAISS antes de gerar qualquer resposta. Cada resposta passa por três camadas de validação — estrutural, heurística e semântica — antes de ser entregue. Toda operação é registrada em evidence logs imutáveis.
+O sistema recupera contexto relevante via índice FAISS antes de gerar qualquer resposta. Neste repositório, a síntese é validada em duas camadas — estrutural e heurística (critic) — e as consultas são registradas em evidence logs append-only com encadeamento por hash (detecção de adulteração). A validação semântica por LLM e o fluxo de revisão humana (HITL) fazem parte do sistema completo, mantido em repositório privado.
 
-Este repositório inclui um **corpus de demonstração com 13 SOPs sintéticos** do domínio regulatório farmacêutico/biotech (GxP), com audit report público validando 13/13 queries com PASS.
+Este repositório inclui um **corpus de demonstração com 13 SOPs sintéticos** do domínio regulatório farmacêutico/biotech (GxP), com audit report público: o SOP esperado aparece no top-3 em 13/13 queries (e em #1 em 12/13).
 
 ---
 
 ## Pipeline
 
+**Neste repositório:**
+
 ```
 Query
   → Retriever (multi-query + rerank + diversity cap)
-  → LLM → draft
+  → Draft heurístico a partir dos chunks recuperados
   → Validator estrutural
   → Critic heurístico
-  → Semantic Validator  (LLM separado, temperatura 0)
   → Final Answer
-  → Evidence Log        (rag_queries.jsonl)
-  → HITL               (se high-risk ou falha semântica)
+  → Evidence Log        (rag_queries.jsonl, append-only + hash-chain)
 ```
+
+**No sistema completo (privado):** o draft é gerado por LLM com citações `[Fonte N]`, passa por um Semantic Validator (LLM separado, temperatura 0) e casos de alto risco seguem para revisão humana (HITL).
 
 ---
 
@@ -59,6 +62,8 @@ Query
 nkassist-public/
 ├── .env.example                     ← variáveis de ambiente (template)
 ├── .gitignore
+├── RUNBOOK.md                       ← guia operacional com outputs validados
+├── test_*.py                        ← scripts de validação do Quick Start
 ├── corpus/
 │   └── gxp-demo/                    ← 13 SOPs sintéticos (corpus de demo)
 │       ├── SOP-001-controle-temperatura-camaras-frias.md
@@ -71,7 +76,7 @@ nkassist-public/
 │   ├── rerank.py                    ← reranking semântico
 │   ├── focus.py                     ← context focusing
 │   ├── parsers.py                   ← parsers de formato
-│   └── synthesis_engine.py          ← validator + critic + semantic validator
+│   └── synthesis_engine.py          ← validator estrutural + critic heurístico
 ├── core/
 │   └── evidence.py                  ← evidence log estruturado
 ├── audits/
@@ -103,6 +108,8 @@ pip install openai faiss-cpu numpy python-dotenv
 ```bash
 cp .env.example .env
 # Editar .env com sua OPENAI_API_KEY
+python test_api.py
+# Esperado: API OK
 ```
 
 ### 3. Ingestão do corpus
@@ -123,7 +130,7 @@ python test_faiss.py
 
 ```bash
 python test_retriever.py
-# Esperado: SOP correto no #1 para cada query
+# Esperado: SOP correto no #1 nas 5 queries do teste
 ```
 
 ### 6. Rodar audit
@@ -163,15 +170,17 @@ O corpus pode ser substituído por qualquer conjunto de documentos `.md` ou `.tx
 
 ## Qualidade — Audit Report
 
-Resultado validado em 2026-05-15 sobre o corpus GxP demo:
+Resultado validado em 2026-05-15 e reproduzido em 2026-11-23 sobre o corpus GxP demo:
 
 | Métrica | Resultado |
 |---------|-----------|
 | Queries testadas | 13 |
-| PASS | 13 (100%) |
-| FAIL | 0 |
-| Score top-1 médio | 0.655 |
+| SOP esperado no top-3 (critério PASS) | 13 (100%) |
+| SOP esperado em #1 | 12 de 13 (Q001 aparece em #2) |
+| Score top-1 médio | 0.651 |
 | Integridade do índice | 92/92 chunks |
+
+> **Escopo:** o audit mede apenas o retrieval, não a qualidade das respostas geradas. As queries foram escritas pelo autor sobre um corpus sintético; o resultado é um indicador de que o pipeline funciona, não um benchmark.
 
 Relatório completo: [`audits/audit_report_gxp_demo.json`](audits/audit_report_gxp_demo.json)
 
@@ -182,9 +191,9 @@ Relatório completo: [`audits/audit_report_gxp_demo.json`](audits/audit_report_g
 | Princípio | Descrição |
 |-----------|-----------|
 | **Índice reconstruível** | O FAISS pode ser recriado do zero a qualquer momento a partir do corpus |
-| **Validação em camadas** | Estrutural → Heurística → Semântica antes de cada resposta final |
+| **Validação em camadas** | Estrutural → Heurística neste repositório; camada semântica no sistema completo |
 | **Evidence logs** | Toda query, contexto e resposta registrados em append-only |
-| **Human-in-the-Loop** | Aprovação humana antes de ações classificadas como high-risk |
+| **Human-in-the-Loop** | O evidence log registra aprovações humanas; o fluxo de revisão completo está no sistema completo |
 | **Corpus plugável** | Qualquer diretório de documentos pode ser usado como fonte de conhecimento |
 | **Audit reproduzível** | Script de audit incluído — qualquer pessoa pode validar a qualidade do retriever |
 

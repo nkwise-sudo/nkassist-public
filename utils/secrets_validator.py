@@ -22,13 +22,12 @@ class SecretsValidator:
         'anthropic_key': r'sk-ant-[A-Za-z0-9\-]{95}',
         'aws_access': r'AKIA[0-9A-Z]{16}',
         'github_token': r'ghp_[A-Za-z0-9]{36}',
-        'generic_api_key': r'api[_-]?key[\s]*[=:][\s]*['\"][A-Za-z0-9]{20,}['\"]'
+        'generic_api_key': r"api[_-]?key[\s]*[=:][\s]*['\"][A-Za-z0-9]{20,}['\"]"
     }
     
     # Variáveis de ambiente obrigatórias
     REQUIRED_ENV_VARS = [
         'OPENAI_API_KEY',
-        'ANTHROPIC_API_KEY'
     ]
     
     @staticmethod

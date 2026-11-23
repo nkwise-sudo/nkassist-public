@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-05-15T18:42:38.501251+00:00",
+  "timestamp": "2026-11-23T20:23:15.627531+00:00",
   "corpus": "gxp-demo",
   "overall_status": "PASS",
   "summary": {
@@ -21,12 +21,12 @@
         "SOP-003-limpeza-sanitizacao-areas-limpas.md"
       ],
       "top_3_scores": [
-        0.636,
-        0.6266,
-        0.6194
+        0.6361,
+        0.6265,
+        0.6193
       ],
       "hit_in_top3": true,
-      "retrieval_time_ms": 2895.88
+      "retrieval_time_ms": 4098.45
     },
     {
       "id": "Q002",
@@ -40,12 +40,12 @@
         "SOP-003-limpeza-sanitizacao-areas-limpas.md"
       ],
       "top_3_scores": [
-        0.6679,
+        0.6676,
         0.5998,
         0.5983
       ],
       "hit_in_top3": true,
-      "retrieval_time_ms": 779.39
+      "retrieval_time_ms": 758.0
     },
     {
       "id": "Q003",
@@ -59,12 +59,12 @@
         "SOP-010-controle-temperatura-cadeia-fria.md"
       ],
       "top_3_scores": [
-        0.6563,
+        0.6564,
         0.6275,
         0.6062
       ],
       "hit_in_top3": true,
-      "retrieval_time_ms": 901.02
+      "retrieval_time_ms": 476.32
     },
     {
       "id": "Q004",
@@ -79,11 +79,11 @@
       ],
       "top_3_scores": [
         0.644,
-        0.6285,
+        0.6284,
         0.6013
       ],
       "hit_in_top3": true,
-      "retrieval_time_ms": 647.98
+      "retrieval_time_ms": 491.81
     },
     {
       "id": "Q005",
@@ -98,11 +98,11 @@
       ],
       "top_3_scores": [
         0.6443,
-        0.6309,
-        0.6258
+        0.631,
+        0.6257
       ],
       "hit_in_top3": true,
-      "retrieval_time_ms": 745.27
+      "retrieval_time_ms": 515.0
     },
     {
       "id": "Q006",
@@ -116,12 +116,12 @@
         "SOP-011-gestao-residuos-quimicos-biologicos.md"
       ],
       "top_3_scores": [
-        0.6747,
-        0.6381,
-        0.6137
+        0.6746,
+        0.6385,
+        0.6136
       ],
       "hit_in_top3": true,
-      "retrieval_time_ms": 591.27
+      "retrieval_time_ms": 577.0
     },
     {
       "id": "Q007",
@@ -136,11 +136,11 @@
       ],
       "top_3_scores": [
         0.6317,
-        0.6252,
+        0.6251,
         0.6194
       ],
       "hit_in_top3": true,
-      "retrieval_time_ms": 901.8
+      "retrieval_time_ms": 536.31
     },
     {
       "id": "Q008",
@@ -154,12 +154,12 @@
         "SOP-013-controle-mudancas.md"
       ],
       "top_3_scores": [
-        0.6575,
+        0.6579,
         0.615,
-        0.6079
+        0.6083
       ],
       "hit_in_top3": true,
-      "retrieval_time_ms": 899.71
+      "retrieval_time_ms": 595.0
     },
     {
       "id": "Q009",
@@ -173,12 +173,12 @@
         "SOP-010-controle-temperatura-cadeia-fria.md"
       ],
       "top_3_scores": [
-        0.6607,
+        0.6606,
         0.6239,
-        0.6198
+        0.6199
       ],
       "hit_in_top3": true,
-      "retrieval_time_ms": 2362.99
+      "retrieval_time_ms": 2333.93
     },
     {
       "id": "Q010",
@@ -194,10 +194,10 @@
       "top_3_scores": [
         0.6599,
         0.6371,
-        0.6228
+        0.6229
       ],
       "hit_in_top3": true,
-      "retrieval_time_ms": 945.43
+      "retrieval_time_ms": 553.0
     },
     {
       "id": "Q011",
@@ -212,11 +212,11 @@
       ],
       "top_3_scores": [
         0.6302,
-        0.5975,
-        0.5907
+        0.5977,
+        0.5906
       ],
       "hit_in_top3": true,
-      "retrieval_time_ms": 545.0
+      "retrieval_time_ms": 556.0
     },
     {
       "id": "Q012",
@@ -231,11 +231,11 @@
       ],
       "top_3_scores": [
         0.6604,
-        0.6491,
-        0.6318
+        0.649,
+        0.632
       ],
       "hit_in_top3": true,
-      "retrieval_time_ms": 570.07
+      "retrieval_time_ms": 558.0
     },
     {
       "id": "Q013",
@@ -254,7 +254,7 @@
         0.6218
       ],
       "hit_in_top3": true,
-      "retrieval_time_ms": 547.92
+      "retrieval_time_ms": 549.8
     }
   ]
 }

@@ -9,6 +9,8 @@
 > - Queries do audit sem acentos (compatibilidade PowerShell/Windows)
 > - Chunks esperados ajustados para 92 (resultado real dos 13 SOPs)
 > - Scripts salvos em arquivo `.py` em vez de `-c` inline (evita erros de parsing no PowerShell)
+>
+> **Revisão 2026-11-23:** os scripts `test_*.py` deste guia agora estão incluídos na raiz do repositório; este documento descreve o pipeline determinístico (sem LLM), que é o que este repositório contém.
 
 ---
 
@@ -62,7 +64,7 @@ dir .env
 
 ### Chave OpenAI
 
-Salve como `test_api.py` e execute:
+O script `test_api.py` já está incluído na raiz do repositório (conteúdo abaixo, para referência):
 
 ```python
 # test_api.py
@@ -92,6 +94,7 @@ nkassist-public/
 ├── .env.example                  ← template público (vai ao GitHub)
 ├── .gitignore                    ← exclui .env, data/, evidence/
 ├── LICENSE                       ← licença do repositório
+├── test_*.py                     ← scripts de validação deste guia
 ├── corpus/
 │   └── gxp-demo/                 ← 13 SOPs (vai ao GitHub)
 │       ├── SOP-001-controle-temperatura-camaras-frias.md
@@ -109,13 +112,11 @@ nkassist-public/
 ├── core/
 │   ├── __init__.py
 │   └── evidence.py
-├── data/
-│   ├── .gitkeep                  ← pasta versionada, conteúdo ignorado
+├── data/                         ← criada automaticamente (NÃO vai ao GitHub)
 │   ├── corpus.jsonl              ← gerado pelo ingest (NÃO vai ao GitHub)
 │   ├── faiss.index               ← gerado pelo FAISS (NÃO vai ao GitHub)
 │   └── faiss_meta.jsonl          ← gerado pelo FAISS (NÃO vai ao GitHub)
-├── evidence/
-│   ├── .gitkeep
+├── evidence/                     ← criada automaticamente (NÃO vai ao GitHub)
 │   └── rag_queries.jsonl         ← logs (NÃO vai ao GitHub)
 └── audits/
     ├── __init__.py
@@ -177,7 +178,7 @@ mkdir audits
 
 ## 4. Fase 1 — Ingestão do Corpus
 
-Salve como `test_ingest.py` e execute:
+O script `test_ingest.py` já está incluído na raiz do repositório (conteúdo abaixo, para referência):
 
 ```python
 # test_ingest.py
@@ -216,7 +217,7 @@ Overlap                : 150
 
 ### Validar corpus gerado
 
-Salve como `test_corpus.py` e execute:
+O script `test_corpus.py` já está incluído na raiz do repositório (conteúdo abaixo, para referência):
 
 ```python
 # test_corpus.py
@@ -266,7 +267,7 @@ Chunks por documento:
 
 ## 5. Fase 2 — Build do Índice FAISS
 
-Salve como `test_faiss.py` e execute:
+O script `test_faiss.py` já está incluído na raiz do repositório (conteúdo abaixo, para referência):
 
 ```python
 # test_faiss.py
@@ -338,7 +339,7 @@ Match   : OK
 
 ## 6. Fase 3 — Validação do Retriever
 
-Salve como `test_retriever.py` e execute:
+O script `test_retriever.py` já está incluído na raiz do repositório (conteúdo abaixo, para referência):
 
 ```python
 # test_retriever.py
@@ -415,7 +416,7 @@ Chunks recuperados: 6
 
 > **Import correto:** `from rag.synthesis_engine import` — o módulo está em `rag/`, não na raiz.
 
-Salve como `test_synthesis.py` e execute:
+O script `test_synthesis.py` já está incluído na raiz do repositório (conteúdo abaixo, para referência):
 
 ```python
 # test_synthesis.py
@@ -477,7 +478,7 @@ Claims geradas     : 1
 ```
 
 > **Coverage ratio 0.5** é esperado para o pipeline sem LLM (draft heurístico).
-> Com `run_synthesis_with_draft` + LLM externo, coverage sobe para 0.8+.
+> `run_synthesis_with_draft` (draft gerado por LLM externo, com validação semântica) faz parte do sistema completo e não está incluído neste repositório.
 
 ---
 
@@ -593,9 +594,9 @@ SEGURANÇA
 
 ```bash
 # Garantir que está na raiz do projeto
-cd F:\projects\claude\nkassist-public
+cd <pasta-do-repositorio>
 # Adicionar ao PYTHONPATH se necessário
-$env:PYTHONPATH = "F:\projects\claude\nkassist-public"
+$env:PYTHONPATH = "<pasta-do-repositorio>"
 ```
 
 ### `KeyError: 'indexed'` no build FAISS
