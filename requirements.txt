@@ -1,8 +1,8 @@
-﻿# NKAssist — dependencies
+# NKAssist — dependencies
 # Generated: 2026-05-15
 
 # Core
-openai>=1.7.0
+openai>=3.57.0
 faiss-cpu>=1.7.4
 numpy>=1.26.0
 python-dotenv>=1.0.0
